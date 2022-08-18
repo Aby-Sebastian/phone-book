@@ -1,0 +1,59 @@
+<!-- Button trigger modal -->
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Contact</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+        <div class="modal-body">
+            <div class="modal-body">
+              {{edit_form.as_p}}
+            </div>
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-primary save-btn" value="Save changes">
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script type="text/javascript">
+  $('#editContactModal').click(function(){
+  let contact_id = $(this).attr("data-catid");
+  let csr = $("input[name=csrfmiddlewaretoken]").val();
+  mydata = { contact_id:contact_id, csrfmiddlewaretoken:csr }
+  console.log(mydata);
+  $.ajax(
+  {
+      url: "{% url 'app:edit' %}",
+      type:"post",
+      data:mydata,
+      success: function( data ) 
+      {
+        console.log(data.favorite)
+        $('#id_first_name').val(data.first_name);
+        $('#id_last_name').val(data.last_name);
+        $('#id_country_code').val(data.country_code);
+        $('#id_phone_number').val(data.phone_number);
+        $('#id_email_id').val(data.email_id);
+        $('#id_favorite').prop('checked',data.favorite);
+        $('#id_image').val(data.image);
+        $('#id_category').val(data.category);
+          // $( '#like'+ catid ).remove();
+          // $( '#message' ).text(data);
+      }
+    })
+  });
+
+  </script>

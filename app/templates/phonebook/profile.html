@@ -1,0 +1,227 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}
+Favorite Contacts
+{% endblock title %}
+
+{% block head %}
+
+<link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">
+
+<!-- Bootstrap core CSS -->
+<link href="{% static 'assets/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+
+
+<style>
+  .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
+</style>
+
+
+<!-- Custom styles for this template -->
+
+<link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block content %}
+
+
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="{% url 'app:home' %}">Contacts</a>
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+    data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+</header>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'app:home' %}">
+              <span data-feather="home"></span>
+              Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/favorite/">
+              <span data-feather="file"></span>
+              Favorites
+            </a>
+          </li>
+          
+
+        </ul>
+
+
+      </div>
+    </nav>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message }}</div>
+            {% endfor %}
+        </ul>
+      {% endif %}
+
+      <div class="row">
+        <div class="col">
+          <h2>Profile</h2>
+        </div>
+        <div class="col">
+
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <!-- <button class="btn btn-primary me-md-2" type="button">Buttons</button>
+            <button class="btn btn-primary" type="button">Button</button> -->
+
+            <div class="form-check form-switch" style="margin-top: 10px;" data-bs-toggle="tooltip" data-bs-placement="top" title="Favorite" >
+              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="Favorite" {% if data.favorite %} checked {% endif %} disabled>
+              <label class="form-check-label" for="flexSwitchCheckDefault" hidden>Favorite</label>
+            </div>
+
+            <div class="dropdown">
+              <a class="btn me-md-2 " href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                  <path
+                    d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                </svg>
+              </a>
+              <!-- <button class="btn btn-primary btn-sm">Edit</button> -->
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li><a class="btn btn-primary dropdown-item" id="editContactModal" data-catid="{{data.pk}}" data-bs-toggle="modal" data-bs-target="#editModal">
+                  Edit
+                </a></li>
+                
+                <li><a class="btn btn-primary dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Delete
+                </a></li>
+                <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% include 'app/editModal.html' %}
+      {% include 'app/deleteModal.html' %}
+      <br>
+      <div class="text-center">
+        {% if data.image.url %}
+          <img src="{{data.image.url}}"
+        class="rounded mx-auto d-block " alt="..." style="width:12rem">
+        {% else %}
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Google_Contacts_icon.svg"
+          class="rounded mx-auto d-block " alt="..." style="width:12rem">
+        {% endif %}
+      </div>
+      
+    <br>
+
+
+
+      <div class="text-center">
+        <h4>{{ data.first_name }} {{ data.last_name }}</h4>
+      </div>
+      <br>
+      <!-- 
+      <div class="card" style="width:25rem;">
+        <div class="card-body">
+          <h5 class="card-title">Contact details</h5>
+          <div class="card-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone" viewBox="0 0 16 16">
+            <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+            </svg>&nbsp; 
+            <a target="_blank" href="tel:+918943606445" jslog="24337; track:click,impression" class="text-decoration-none" data-toggle="tooltip" data-placement="bottom" title="Call phone (+918943606445)"><span data-tooltip="Call phone (+918943606445)" dir="ltr">+918943606445</span></a> • Mobile</span>
+          </div>
+        </div>
+      </div> -->
+
+
+      <!-- test -->
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Mobile</h5>
+              <div class="card-text">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-telephone" viewBox="0 0 16 16">
+                  <path
+                    d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                </svg>&nbsp;
+                
+                <a target="_blank" href="tel:{{ data.country_code }} {{ data.phone_number }}"
+                  jslog="24337; track:click,impression" class="text-decoration-none" data-toggle="tooltip"
+                  data-placement="bottom" title="Call phone ({{ data.country_code }}{{ data.phone_number }})">
+                  <span
+                    data-tooltip="Call phone ({{ data.country_code }}{{ data.phone_number }})" dir="ltr">
+                    {{ data.country_code }} {{ data.phone_number }}
+                  </span>
+                </a> • {{ data.category }}</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        {% if data.email_id %}
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">E-mail</h5>
+              <div class="card-text">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-envelope" viewBox="0 0 16 16">
+                  <path
+                    d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z" />
+                </svg>&nbsp;
+                <a target="_blank" href="mailto:{{ data.email_id }}" jslog="24337; track:click,impression"
+                  class="text-decoration-none" data-toggle="tooltip" data-placement="bottom"
+                  title="Mail to ({{ data.email_id }})"><span data-tooltip="Mail to (abc@gmail.com)" dir="ltr">
+                    {{ data.email_id }}</span></a></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+
+
+      <br>
+
+    </main>
+  </div>
+</div>
+
+
+<script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+  integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
+  integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+{% endblock content %}
