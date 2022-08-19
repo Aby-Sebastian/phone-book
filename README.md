@@ -1,6 +1,6 @@
 # Phone-Book
 
-A Simple django application developed to understand the CRUD operation in django. The application stores the data in Postgressql database. The whole application is put in a Docker container.
+A Simple django application developed to understand the CRUD operation in django. The application stores the data in Postgressql database. The django application is put in a Docker container.
 
 ### Features 
 . User can create a contact <br>
