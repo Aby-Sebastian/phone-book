@@ -18,6 +18,8 @@ A simple, reponsive  website. Built with:
 - update a contact <br>
 - view a contact <br>
 - delete a contact <br>
+- search a contact
+- add a profile pic for contacts
 - Each contact can contain first name, last name, country code, phone number, email id, contacts image <br>
 - User can add contact's as Favorites too and it will be shown in Favorite section in application <br>
 - User can update contacts image <br>
